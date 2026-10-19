@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>バイクサスペンション計測カルテ (SAG SETUP SPEC SHEET)</title>
+  <style>
+    body {
+      font-family: 'Helvetica Neue', Arial, "Hiragino Kaku Gothic ProN", "Meiryo", sans-serif;
+      background-color: #f0f2f5;
+      margin: 0;
+      padding: 20px;
+      color: #333;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+      border: 2px solid #2b3a4a;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 3px double #2b3a4a;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 22px;
+      letter-spacing: 1px;
+      color: #1a252f;
+    }
+    .header .subtitle {
+      font-size: 12px;
+      color: #7f8c8d;
+      font-weight: bold;
+    }
+
+    /* 基本調整ガイダンス */
+    .guidance-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-left: 6px solid #2563eb;
+      border-radius: 6px;
+      padding: 12px 18px;
+      margin-bottom: 20px;
+    }
+    .guidance-title {
+      font-size: 15px;
+      font-weight: bold;
+      color: #1e293b;
+      margin-bottom: 6px;
+      border-bottom: 1px dashed #cbd5e1;
+      padding-bottom: 4px;
+    }
+    .guidance-item {
+      font-size: 14px;
+      font-weight: bold;
+      margin: 4px 0;
+    }
+    .guidance-f { color: #1976D2; }
+    .guidance-r { color: #D32F2F; }
+    .guidance-desc {
+      font-size: 12px;
+      color: #475569;
+      margin-top: 6px;
+      background: #fff;
+      padding: 6px 10px;
+      border-radius: 4px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .diagram-area {
+      text-align: center;
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 25px;
+      position: relative;
+    }
+    svg {
+      width: 100%;
+      height: auto;
+      max-height: 450px;
+    }
+    .procedure-box {
+      background: #fff;
+      border-left: 5px solid #2563eb;
+      padding: 15px 20px;
+      border-radius: 4px;
+      margin-bottom: 25px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .procedure-box h2 {
+      margin-top: 0;
+      font-size: 16px;
+      color: #1e3a8a;
+      border-bottom: 1px dashed #cbd5e1;
+      padding-bottom: 5px;
+    }
+    .procedure-list {
+      list-style-type: none;
+      padding-left: 0;
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.8;
+    }
+    .procedure-list li {
+      margin-bottom: 8px;
+      position: relative;
+      padding-left: 28px;
+    }
+    .num-badge {
+      position: absolute;
+      left: 0;
+      top: 2px;
+      background: #2563eb;
+      color: #fff;
+      font-size: 11px;
+      font-weight: bold;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .record-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    .record-table th, .record-table td {
+      border: 1px solid #cbd5e1;
+      padding: 10px 12px;
+      text-align: center;
+      font-size: 14px;
+    }
+    .record-table th {
+      background: #f1f5f9;
+      color: #334155;
+    }
+    .val-input {
+      width: 85%;
+      padding: 8px;
+      border: 1.5px solid #94a3b8;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 15px;
+      font-weight: bold;
+      background-color: #ffffff;
+    }
+    .calc-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 20px;
+    }
+    .result-card {
+      background: #ffffff;
+      border: 2px solid #2563eb;
+      border-radius: 8px;
+      padding: 15px;
+      margin-top: 20px;
+    }
+    .btn {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      background: #4CAF50;
+      color: #fff;
+      text-align: center;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      font-size: 1rem;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div>
+      <h1>MOTORCYCLE SAG MEASUREMENT SPEC SHEET</h1>
+      <div class="subtitle">サスペンションセッティング 基本寸法＆レバー比計測カルテ</div>
+    </div>
+    <div style="text-align: right; font-size: 12px;">
+      DATE: <input type="text" id="input_date" style="width: 110px; border:none; border-bottom:1px solid #999;"><br>
+      MODEL: <input type="text" id="input_model" value="VTR250" style="width: 80px; border:none; border-bottom:1px solid #999; font-weight:bold;">
+    </div>
+  </div>
+
+  <!-- 基本調整ガイダンス表示エリア -->
+  <div class="guidance-box">
+    <div class="guidance-title">【基本調整ガイダンス (0G - 1G' 沈み込み量)】</div>
+    <div class="guidance-item guidance-f">① フロント調整幅： 30mm ～ 35mm</div>
+    <div class="guidance-item guidance-r">② リア調整幅    ： 20mm ～ 25mm</div>
+    <div class="guidance-desc">
+      <b>【調整目安】</b><br>
+      ・<b>数値が大きい（目標より超えている）：</b> 柔らかすぎ ➔ イニシャルを掛ける（締める）<br>
+      ・<b>数値が小さい（目標より少ない）：</b> 硬すぎ ➔ イニシャルを抜く（緩める）
+    </div>
+  </div>
+
+  <!-- ダイヤグラム（製図・イラストエリア） -->
+  <div class="diagram-area">
+    <svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arrow-blue" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#2563eb"/>
+        </marker>
+        <marker id="arrow-red" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#dc2626"/>
+        </marker>
+        <marker id="arrow-green" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#16a34a"/>
+        </marker>
+      </defs>
+
+      <!-- グリッド背景 -->
+      <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M 20 0 L 0 0 0 20" fill="none" stroke="#e2e8f0" stroke-width="0.5"/>
+      </pattern>
+      <rect width="800" height="450" fill="url(#grid)" />
+
+      <!-- 車両シルエット -->
+      <g stroke="#334155" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="620" cy="320" r="65" stroke="#475569" stroke-width="6" fill="#fff"/>
+        <circle cx="220" cy="320" r="65" stroke="#475569" stroke-width="6" fill="#fff"/>
+        <circle cx="620" cy="320" r="8" fill="#475569"/>
+        <circle cx="220" cy="320" r="8" fill="#475569"/>
+
+        <line x1="620" y1="320" x2="550" y2="120" stroke="#2563eb" stroke-width="6"/>
+        <line x1="540" y1="140" x2="560" y2="140" stroke="#1e293b" stroke-width="8"/>
+        <path d="M 550,120 L 530,90 L 560,85" stroke="#1e293b" stroke-width="4"/>
+
+        <path d="M 545,140 L 440,180 L 410,280 L 510,280 Z" stroke="#94a3b8" stroke-width="3" fill="#f1f5f9"/>
+        <path d="M 545,140 C 500,100 420,110 390,150 C 430,170 500,160 545,140 Z" fill="#3b82f6" opacity="0.8"/>
+        <path d="M 390,150 L 260,165 C 240,130 160,140 140,160 C 200,190 300,180 390,180 Z" fill="#1e293b"/>
+
+        <line x1="410" y1="280" x2="220" y2="320" stroke="#64748b" stroke-width="8"/>
+      </g>
+
+      <!-- 基準点 A, B, C -->
+      <circle cx="410" cy="280" r="6" fill="#dc2626"/>
+      <text x="410" y="305" font-weight="bold" fill="#dc2626" font-size="16" text-anchor="middle">A (ピボット)</text>
+
+      <circle cx="220" cy="320" r="6" fill="#dc2626"/>
+      <text x="220" y="350" font-weight="bold" fill="#dc2626" font-size="16" text-anchor="middle">B (リアアクスル)</text>
+
+      <path d="M 220,320 A 194,194 0 0,1 245,160" fill="none" stroke="#dc2626" stroke-width="2" stroke-dasharray="4,4"/>
+      <circle cx="245" cy="160" r="6" fill="#dc2626"/>
+      <polygon points="245,145 235,130 255,130" fill="#dc2626"/>
+      <text x="245" y="120" font-weight="bold" fill="#dc2626" font-size="16" text-anchor="middle">C (フレーム接点印)</text>
+
+      <!-- 計測ライン① FRH -->
+      <line x1="550" y1="140" x2="680" y2="140" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="620" y1="320" x2="680" y2="320" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="660" y1="140" x2="660" y2="320" stroke="#2563eb" stroke-width="2" marker-start="url(#arrow-blue)" marker-end="url(#arrow-blue)"/>
+      <rect x="670" y="215" width="110" height="30" fill="#eff6ff" rx="4" stroke="#2563eb"/>
+      <text x="725" y="235" font-weight="bold" fill="#2563eb" font-size="14" text-anchor="middle">① FRH</text>
+
+      <!-- 計測ライン L1 -->
+      <line x1="410" y1="280" x2="410" y2="400" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="220" y1="320" x2="220" y2="400" stroke="#94a3b8" stroke-width="1" stroke-dasharray="3,3"/>
+      <line x1="220" y1="380" x2="410" y2="380" stroke="#16a34a" stroke-width="2" marker-start="url(#arrow-green)" marker-end="url(#arrow-green)"/>
+      <rect x="280" y="395" width="70" height="25" fill="#f0fdf4" rx="4" stroke="#16a34a"/>
+      <text x="315" y="412" font-weight="bold" fill="#16a34a" font-size="13" text-anchor="middle">L1 (A-B間)</text>
+
+      <line x1="410" y1="280" x2="245" y2="160" stroke="#dc2626" stroke-width="2" stroke-dasharray="5,5"/>
+      <text x="340" y="210" font-weight="bold" fill="#dc2626" font-size="13">③ 軌跡(A→C)</text>
+
+      <!-- 計測ライン④ RRH -->
+      <line x1="245" y1="160" x2="220" y2="320" stroke="#dc2626" stroke-width="3" marker-start="url(#arrow-red)" marker-end="url(#arrow-red)"/>
+      <rect x="110" y="225" width="110" height="30" fill="#fef2f2" rx="4" stroke="#dc2626"/>
+      <text x="165" y="245" font-weight="bold" fill="#dc2626" font-size="14" text-anchor="middle">④ RRH (C-B)</text>
+    </svg>
+  </div>
+
+  <!-- レバー比（L1 / L2）入力＆自動計算エリア -->
+  <div class="calc-box">
+    <h2 style="font-size: 16px; margin-top:0; color:#1e293b; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px;">
+      【リアサス レバー比の算出 (L1 ÷ L2)】
+    </h2>
+    <table class="record-table" style="margin-top: 10px;">
+      <thead>
+        <tr>
+          <th style="width: 35%;">L1 (ピボット〜アクスル垂直距離)</th>
+          <th style="width: 35%;">L2 (ショック作用線〜ピボット垂直距離)</th>
+          <th style="width: 30%; background:#e0f2fe; color:#0369a1;">算出レバー比 (L1 / L2)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><input type="number" id="input_l1" class="val-input" placeholder="例: 500" oninput="calcAll()"> mm</td>
+          <td><input type="number" id="input_l2" class="val-input" placeholder="例: 200" oninput="calcAll()"> mm</td>
+          <td style="background:#f0f9ff;">
+            <span id="res_ratio" style="font-size: 20px; font-weight: bold; color: #2563eb;">--</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- サグ・ライドハイト計測ログ -->
+  <div class="calc-box">
+    <h2 style="font-size: 16px; margin-top:0; color:#1e293b; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px;">
+      【サグ・ライドハイト計測値 (mm)】
+    </h2>
+    <table class="record-table">
+      <thead>
+        <tr>
+          <th style="width: 30%;">計測項目</th>
+          <th style="width: 35%;">0G (全伸び寸法)</th>
+          <th style="width: 35%;">1G' (乗車時寸法)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>フロントライドハイト (FRH)</b></td>
+          <td><input type="number" id="frh_0g" class="val-input" placeholder="0G (mm)" oninput="calcAll()"></td>
+          <td><input type="number" id="frh_1g" class="val-input" placeholder="1G' (mm)" oninput="calcAll()"></td>
+        </tr>
+        <tr>
+          <td><b>リアライドハイト (RRH)</b></td>
+          <td><input type="number" id="rrh_0g" class="val-input" placeholder="0G (mm)" oninput="calcAll()"></td>
+          <td><input type="number" id="rrh_1g" class="val-input" placeholder="1G' (mm)" oninput="calcAll()"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 算出・診断・イニシャル調整値カード -->
+  <div class="result-card">
+    <h2 style="font-size: 16px; margin-top:0; color:#1e293b; border-bottom: 1px solid #cbd5e1; padding-bottom: 5px;">
+      【自動算出結果 & イニシャル調整値アドバイス】
+    </h2>
+
+    <!-- フロント結果 -->
+    <div style="margin-bottom: 15px;">
+      <div style="font-weight: bold; color:#1976D2; font-size:15px;">
+        ■ フロントサグ (FRH_0G - FRH_1G'): <span id="res_f_sag" style="font-size:18px;">--</span> mm
+      </div>
+      <div id="res_f_status" style="font-weight:bold; margin-top:4px; font-size:14px; color:#555;">
+        └ 調整目安: 数値を入力してください
+      </div>
+    </div>
+
+    <hr style="border: 0; border-top: 1px solid #cbd5e1; margin: 12px 0;">
+
+    <!-- リア結果 -->
+    <div>
+      <div style="font-weight: bold; color:#D32F2F; font-size:15px;">
+        ■ リアサグ (RRH_0G - RRH_1G'): <span id="res_r_sag" style="font-size:18px;">--</span> mm
+      </div>
+      <div id="res_r_status" style="font-weight:bold; margin-top:4px; font-size:14px; color:#555;">
+        └ 調整目安: 数値を入力してください
+      </div>
+      <div id="res_r_shock_adj" style="font-size:13px; font-weight:bold; color:#2563eb; margin-top:6px;">
+        <!-- レバー比連動のショック調整アドバイス -->
+      </div>
+    </div>
+  </div>
+
+  <button class="btn" onclick="downloadCSV()">カルテデータをCSV出力・保存</button>
+
+</div>
+
+<script>
+  // 初期日付セット
+  const now = new Date();
+  document.getElementById('input_date').value = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0') + '-' + String(now.getDate()).padStart(2,'0');
+
+  // 全自動計算関数（堅牢版）
+  function calcAll() {
+    // 1. レバー比（L1 / L2）計算
+    const l1 = parseFloat(document.getElementById('input_l1').value);
+    const l2 = parseFloat(document.getElementById('input_l2').value);
+    let ratio = null;
+
+    if (!isNaN(l1) && !isNaN(l2) && l2 > 0) {
+      ratio = l1 / l2;
+      document.getElementById('res_ratio').innerText = ratio.toFixed(2);
+    } else {
+      document.getElementById('res_ratio').innerText = "--";
+    }
+
+    // 2. フロントサグ計算
+    const f0 = parseFloat(document.getElementById('frh_0g').value);
+    const f1p = parseFloat(document.getElementById('frh_1g').value);
+
+    if (!isNaN(f0) && !isNaN(f1p)) {
+      const fSag = f0 - f1p;
+      document.getElementById('res_f_sag').innerText = fSag.toFixed(1);
+
+      let fStatus = "", fColor = "";
+      if (fSag >= 30 && fSag <= 35) {
+        fStatus = "適正範囲内 (OK)";
+        fColor = "#2E7D32";
+      } else if (fSag > 35) {
+        const diff = fSag - 32.5;
+        fStatus = `柔らかすぎ (+${(fSag-35).toFixed(1)}mm) ➔ イニシャルを【約 ${diff.toFixed(1)}mm 締める】`;
+        fColor = "#E65100";
+      } else {
+        const diff = 32.5 - fSag;
+        fStatus = `硬すぎ (-${(30-fSag).toFixed(1)}mm) ➔ イニシャルを【約 ${diff.toFixed(1)}mm 緩める】`;
+        fColor = "#C62828";
+      }
+      document.getElementById('res_f_status').innerText = "└ 調整目安: " + fStatus;
+      document.getElementById('res_f_status').style.color = fColor;
+    } else {
+      document.getElementById('res_f_sag').innerText = "--";
+      document.getElementById('res_f_status').innerText = "└ 調整目安: 数値を入力してください";
+      document.getElementById('res_f_status').style.color = "#555";
+    }
+
+    // 3. リアサグ計算（独立して確実に実行）
+    const r0 = parseFloat(document.getElementById('rrh_0g').value);
+    const r1p = parseFloat(document.getElementById('rrh_1g').value);
+
+    if (!isNaN(r0) && !isNaN(r1p)) {
+      const rSag = r0 - r1p;
+      document.getElementById('res_r_sag').innerText = rSag.toFixed(1);
+
+      let rStatus = "", rColor = "";
+      let shockAdjText = "";
+
+      if (rSag >= 20 && rSag <= 25) {
+        rStatus = "適正範囲内 (OK)";
+        rColor = "#2E7D32";
+      } else if (rSag > 25) {
+        const wheelDiff = rSag - 22.5;
+        rStatus = `柔らかすぎ (+${(rSag-25).toFixed(1)}mm) ➔ 車輪側サグ幅を【約 ${wheelDiff.toFixed(1)}mm 締める（縮める）】`;
+        rColor = "#E65100";
+
+        if (ratio !== null) {
+          const shockAdj = wheelDiff / ratio;
+          shockAdjText = `➔ 【リアショック本体のプリロードリングを 約 ${shockAdj.toFixed(1)} mm 締め込む】 (レバー比 ${ratio.toFixed(2)} で算定)`;
+        }
+      } else {
+        const wheelDiff = 22.5 - rSag;
+        rStatus = `硬すぎ (-${(20-rSag).toFixed(1)}mm) ➔ 車輪側サグ幅を【約 ${wheelDiff.toFixed(1)}mm 緩める（伸ばす）】`;
+        rColor = "#C62828";
+
+        if (ratio !== null) {
+          const shockAdj = wheelDiff / ratio;
+          shockAdjText = `➔ 【リアショック本体のプリロードリングを 約 ${shockAdj.toFixed(1)} mm 緩める】 (レバー比 ${ratio.toFixed(2)} で算定)`;
+        }
+      }
+
+      document.getElementById('res_r_status').innerText = "└ 調整目安: " + rStatus;
+      document.getElementById('res_r_status').style.color = rColor;
+      document.getElementById('res_r_shock_adj').innerText = shockAdjText;
+    } else {
+      document.getElementById('res_r_sag').innerText = "--";
+      document.getElementById('res_r_status').innerText = "└ 調整目安: 数値を入力してください";
+      document.getElementById('res_r_status').style.color = "#555";
+      document.getElementById('res_r_shock_adj').innerText = "";
+    }
+  }
+
+  // CSV保存
+  function downloadCSV() {
+    const date = document.getElementById('input_date').value;
+    const model = document.getElementById('input_model').value;
+    const l1 = document.getElementById('input_l1').value;
+    const l2 = document.getElementById('input_l2').value;
+    const ratio = document.getElementById('res_ratio').innerText;
+    const frh0 = document.getElementById('frh_0g').value;
+    const frh1 = document.getElementById('frh_1g').value;
+    const fSag = document.getElementById('res_f_sag').innerText;
+    const rrh0 = document.getElementById('rrh_0g').value;
+    const rrh1 = document.getElementById('rrh_1g').value;
+    const rSag = document.getElementById('res_r_sag').innerText;
+
+    const csvHeader = "日付,車種,L1(mm),L2(mm),算出レバー比,FRH_0G,FRH_1G',フロントサグ(mm),RRH_0G,RRH_1G',リアサグ(mm)\n";
+    const csvRow = `"${date}","${model}","${l1}","${l2}","${ratio}","${frh0}","${frh1}","${fSag}","${rrh0}","${rrh1}","${rSag}"\n`;
+
+    const blob = new Blob(["\uFEFF" + csvHeader + csvRow], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement("a");
+    link.href = URL.createObjectURL(blob);
+    link.download = `karte_spec_${date}.csv`;
+    link.click();
+  }
+</script>
+
+</body>
+</html>
